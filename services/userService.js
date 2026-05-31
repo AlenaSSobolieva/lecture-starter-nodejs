@@ -7,7 +7,13 @@ class UserService {
   }
 
   getOne(id) {
-    return userRepository.getOne({ id });
+    const user = userRepository.getOne({ id });
+
+    if (!user) {
+      throw Error("User not found");
+    }
+
+    return user;
   }
 
   search(search) {
@@ -36,10 +42,6 @@ class UserService {
 
   update(id, userData) {
     const user = this.getOne(id);
-    if (!user) {
-      throw Error("User not found");
-    }
-
     const { email, phone } = userData;
 
     if (email) {
@@ -62,12 +64,8 @@ class UserService {
   }
 
   delete(id) {
-    const user = this.getOne(id);
-
-    if (!user) {
-      throw Error("User not found");
-    }
-
+    this.getOne(id);
+    
     return userRepository.delete(id);
   }
 }
